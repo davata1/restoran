@@ -1,0 +1,80 @@
+<?php 
+session_start();
+if(!isset($_SESSION['login_user'])) {
+  header("location: login.php");
+}else{
+  ?>
+
+  <!doctype html> 
+  <html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" type="text/css" href="fontawesome/css/all.min.css">
+
+    <?php
+    include "koneksi.php";
+    ?>
+
+    <div class="container mt-3">
+      <h1 class="text-center">Best seller</h1>
+      <!-- <h2>Striped Rows</h2> -->
+      <!-- <p>The .table-striped class adds zebra-stripes to a table:</p>             -->
+      <table class="table table-striped table-bordered">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">ID</th>
+            <th scope="col">Nama Menu</th>
+            <th scope="col">harga</th>
+            <th scope="col">Gambar</th>
+            <th scope="col">jumlah</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php $nomor=1; ?>
+          <?php
+          $query =mysqli_query($koneksi,'SELECT produk.nama_menu,produk.id_menu,produk.harga,produk.gambar FROM produk LEFT JOIN pemesanan_produk ON pemesanan_produk.id_menu = produk.id_menu ORDER BY pemesanan_produk.jumlah DESC');
+          $result = mysqli_fetch_all($query, MYSQLI_ASSOC);
+          ?>
+          <?php foreach($result as $result) : ?>
+
+
+            <tr>
+              <th scope="row"><?php echo $nomor; ?></th>
+              <td><?php echo $result["id_menu"]; ?></td>
+              <td><?php echo $result["nama_menu"]; ?></td>
+              <td><?php echo $result["harga"]; ?></td>
+              <td><?php echo $result["gambar"]; ?></td>
+              <td><?php echo $result["jumlah"]; ?></td>
+
+              <td>
+
+                <a href="detail_pesanan.php?id=<?php echo $result['id_pemesanan'] ?>" class="badge badge-primary">Detail</a>
+
+
+                <a href="clear_pesanan.php?id=<?php echo $result['id_pemesanan'] ?>" class="badge badge-danger">Hapus Data</a>
+              </td>
+            </tr>
+            <?php $nomor++; ?>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+    <!-- Akhir Menu -->
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+  </body>
+  </html>
+  <?php } ?>
